@@ -4,13 +4,13 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d"
-	x:Class="DynamicCreationAndCollision.Pegador"
+	x:Class="DynamicCreationAndCollision.Catcher"
 	Width="20" Height="5">
 	<UserControl.Resources>
 		<Storyboard x:Name="Move"/>
 	</UserControl.Resources>
 
 	<Canvas x:Name="LayoutRoot">
-		<Rectangle x:Name="Catcher" Fill="#FF00FF79" Height="5" Width="20" MouseLeftButtonDown="Retangulo_MouseLeftButtonDown"/>
+		<Rectangle x:Name="catcher" Fill="#FF00FF79" Height="5" Width="20" MouseLeftButtonDown="Catcher_MouseLeftButtonDown"/>
 	</Canvas>
 </UserControl>

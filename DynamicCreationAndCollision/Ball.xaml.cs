@@ -10,82 +10,83 @@ using System.Windows.Shapes;
 
 namespace DynamicCreationAndCollision
 {
-	public partial class Bola : UserControl
+	public partial class Ball : UserControl
 	{
 		private TextBox painelTop;
 		private TextBox painelLeft;
 		private double rootHeight;
-		public double Velocidade;
-		private bool monitorando;
-		public bool Monitorando
+		public double Speed;
+		private bool monitoring;
+		
+		public double Left 	    { get { return Canvas.GetLeft(this); } }
+		public double Right 	{ get { return Canvas.GetLeft(this) + this.Width ; } }
+		public double Top       { get { return Canvas.GetTop(this); } }
+		public double Bottom    { get { return Canvas.GetTop(this) + this.Height ; } }
+		public bool Monitoring
 		{
 			get 
 			{
-				return monitorando;
+				return monitoring;
 			}
 			set 
 			{
-				monitorando = value;
+				monitoring = value;
 				if (value)
 				{
-					bola.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+					ball.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
 				}
 				else
 				{
-					bola.Stroke = null;
+					ball.Stroke = null;
 				}				
-				if(MonitorandoChanged != null)
-					MonitorandoChanged(this, new MonitorandoArgs(value));
+				if(MonitoringChanged != null)
+					MonitoringChanged(this, new MonitoringArgs(value));
 			}
 		}
-		public double Esquerda 	{ get { return Canvas.GetLeft(this); } }
-		public double Direita 	{ get { return Canvas.GetLeft(this) + this.Width ; } }
-		public double Topo 		{ get { return Canvas.GetTop(this); } }
-		public double Fundo 	{ get { return Canvas.GetTop(this) + this.Height ; } }
 		
-		public event MonitorandoHaldler MonitorandoChanged;
-		
-		public Bola(double Height, ref TextBox txtTop, ref TextBox txtLeft)
+		public Ball(double Height, ref TextBox txtTop, ref TextBox txtLeft)
 		{
 			this.InitializeComponent();
 			
 			this.rootHeight = Height;
 			this.painelTop = txtTop;
 			this.painelLeft = txtLeft;
-			this.Velocidade = (new Random(DateTime.Now.Millisecond).NextDouble()) * 2.0;
-			this.monitorando = false;
+			this.Speed = (new Random(DateTime.Now.Millisecond).NextDouble()) * 2.0;
+			this.monitoring = false;
          	
 			Move.Completed += new EventHandler(Move_Completed);
             Move.Begin();
         }
+		
+		public event MonitoringHaldler MonitoringChanged;		
 
         private void Move_Completed(object sender, EventArgs e)
         {
-            Canvas.SetTop(this, Topo + Velocidade);
+            Canvas.SetTop(this, Top + Speed);
 
-			if (this.Monitorando)
+			if (this.Monitoring)
 			{
-				painelTop.Text = Topo.ToString("0.00");
-				painelLeft.Text = Esquerda.ToString("0.00");
+				painelTop.Text = Top.ToString("0.00");
+				painelLeft.Text = Left.ToString("0.00");
 			}
 			
-            if (Topo + this.Height >= this.rootHeight)
+            if (Top + this.Height >= this.rootHeight)
             {
-                Velocidade *= -1;
+                Speed *= -1;
             }
-            else if (Topo <= 0)
+            else if (Top <= 0)
             {
-                Velocidade *= -1;
+                Speed *= -1;
             }
             Move.Begin();
         }
 
 		private void Ellipse_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			this.Monitorando = !this.Monitorando;
+			this.Monitoring = !this.Monitoring;
 		}
 		
-		public void Terminar()
+		public void Finish()
 		{
 			if (Move != null)
 				Move.Stop();

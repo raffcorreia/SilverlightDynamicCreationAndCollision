@@ -18,159 +18,159 @@ namespace DynamicCreationAndCollision
 		{
 			InitializeComponent();
 			
-			txtBolaTop.Text = "";
-			txtBolaLeft.Text = "";
-			txtPegadorTop.Text = "";
-			txtPegadorLeft.Text = "";
-			bolaSelecionada = 0;
-			pegadorSelecionado = 0;
+			txtBallTop.Text = "";
+			txtBallLeft.Text = "";
+			txtCatcherTop.Text = "";
+			txtCatcherLeft.Text = "";
+			selectedBall = 0;
+			selectedCatcher = 0;
 		}
 
-		private Dictionary<int, Bola> bolas = new Dictionary<int, Bola>();
-		private void btnCriaBola_Click(object sender, System.Windows.RoutedEventArgs e)
+		private Dictionary<int, Ball> balls = new Dictionary<int, Ball>();
+		private void btnCreateBall_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			Bola  minhaBola = new Bola(LayoutRoot.Height, ref txtBolaTop, ref txtBolaLeft);
-			minhaBola.MonitorandoChanged += new MonitorandoHaldler(Bola_MonitorandoChanged);
-			Canvas.SetLeft(minhaBola, (new Random(DateTime.Now.Millisecond).NextDouble()) * (LayoutRoot.Width - minhaBola.Width));
-            Canvas.SetTop(minhaBola, 0);
-            LayoutRoot.Children.Add(minhaBola);
-			bolas.Add(minhaBola.GetHashCode(), minhaBola);
-			selecionaBola();
-			atualizaLabels();
+			Ball  myBall = new Ball(LayoutRoot.Height, ref txtBallTop, ref txtBallLeft);
+			myBall.MonitoringChanged += new MonitoringHaldler(Ball_MonitoringChanged);
+			Canvas.SetLeft(myBall, (new Random(DateTime.Now.Millisecond).NextDouble()) * (LayoutRoot.Width - myBall.Width));
+            Canvas.SetTop(myBall, 0);
+            LayoutRoot.Children.Add(myBall);
+			balls.Add(myBall.GetHashCode(), myBall);
+			selectBall();
+			updateLabels();
 		}
 
-		private Dictionary<int, Pegador> pegadores = new Dictionary<int, Pegador>();
-		private void btnCriaPegador_Click(object sender, System.Windows.RoutedEventArgs e)
+		private Dictionary<int, Catcher> catchers = new Dictionary<int, Catcher>();
+		private void btnCreateCatcher_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			Pegador oPegador = new Pegador(LayoutRoot.Width, ref txtPegadorTop, ref txtPegadorLeft, ref bolas);
-			oPegador.MonitorandoChanged += new MonitorandoHaldler(Pegador_MonitorandoChanged);
-			oPegador.Pegou += new PegouHaldler(Pegador_Pegou);
-            Canvas.SetLeft(oPegador, LayoutRoot.Width / 2);
-            Canvas.SetTop(oPegador, (new Random(DateTime.Now.Millisecond).NextDouble()) * (LayoutRoot.Height - oPegador.Height));
-            LayoutRoot.Children.Add(oPegador);
-			pegadores.Add(oPegador.GetHashCode(), oPegador);
-			selecionaPegador();
-			atualizaLabels();
+			Catcher theCatcher = new Catcher(LayoutRoot.Width, ref txtCatcherTop, ref txtCatcherLeft, ref balls);
+			theCatcher.MonitoringChanged += new MonitoringHaldler(Catcher_MonitoringChanged);
+			theCatcher.Caught += new CaughtHaldler(Catcher_Caught);
+            Canvas.SetLeft(theCatcher, LayoutRoot.Width / 2);
+            Canvas.SetTop(theCatcher, (new Random(DateTime.Now.Millisecond).NextDouble()) * (LayoutRoot.Height - theCatcher.Height));
+            LayoutRoot.Children.Add(theCatcher);
+			catchers.Add(theCatcher.GetHashCode(), theCatcher);
+			selectCatcher();
+			updateLabels();
 		}
 		
-		private void btnBolaDown_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void btnBallDown_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			bolaSelecionada--;
-			if(bolaSelecionada < 0)
-				bolaSelecionada = bolas.Count - 1;
-			selecionaBola();
+			selectedBall--;
+			if(selectedBall < 0)
+				selectedBall = balls.Count - 1;
+			selectBall();
 		}
 
-		private void btnBolaUp_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void btnBallUp_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			bolaSelecionada++;
-			if(bolaSelecionada >= bolas.Count)
-				bolaSelecionada = 0;
-			selecionaBola();
+			selectedBall++;
+			if(selectedBall >= balls.Count)
+				selectedBall = 0;
+			selectBall();
 		}
 		
-		Bola bolaMonitorada;
-		private void Bola_MonitorandoChanged(object sender, MonitorandoArgs e)
+		Ball monitoredBall;
+		private void Ball_MonitoringChanged(object sender, MonitoringArgs e)
 		{
 			if(e.valor) //Importante para evitar recursividade
 			{
-				if(bolaMonitorada != null) 
+				if(monitoredBall != null) 
 				{
-					if(bolaMonitorada != (Bola)sender)
-						bolaMonitorada.Monitorando = false;
+					if(monitoredBall != (Ball)sender)
+						monitoredBall.Monitoring = false;
 				}			
-				bolaMonitorada = (Bola)sender;
+				monitoredBall = (Ball)sender;
 			}
 		}
 
-		private void Pegador_Pegou(object sender, EventArgs e)
+		private void Catcher_Caught(object sender, EventArgs e)
 		{
-			SBPegou.Begin();
-			selecionaPegador();
-			selecionaBola();
-			atualizaLabels();
+			SBCaught.Begin();
+			selectCatcher();
+			selectBall();
+			updateLabels();
 		}
 		
-		int bolaSelecionada;
-		private void selecionaBola()
+		int selectedBall;
+		private void selectBall()
 		{
-			if(bolaSelecionada >= 0 && bolaSelecionada < bolas.Count)
+			if(selectedBall >= 0 && selectedBall < balls.Count)
 			{
-				KeyValuePair<int, Bola> k = bolas.ElementAt(bolaSelecionada);
-				Bola b =  k.Value;
-				b.Monitorando = true;
-				atualizaLabels();
+				KeyValuePair<int, Ball> k = balls.ElementAt(selectedBall);
+				Ball b =  k.Value;
+				b.Monitoring = true;
+				updateLabels();
 			}
 			else
 			{
-				bolaSelecionada = 0;
+				selectedBall = 0;
 			}
 		}
 
-		private void btnPegadorDown_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void btnCatcherDown_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			pegadorSelecionado--;
-			if(pegadorSelecionado < 0)
-				pegadorSelecionado = pegadores.Count - 1;
-			selecionaPegador();
+			selectedCatcher--;
+			if(selectedCatcher < 0)
+				selectedCatcher = catchers.Count - 1;
+			selectCatcher();
 		}
 
-		private void btnPegadorUp_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void btnCatcherUp_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			pegadorSelecionado++;
-			if(pegadorSelecionado >= pegadores.Count)
-				pegadorSelecionado = 0;
-			selecionaPegador();
+			selectedCatcher++;
+			if(selectedCatcher >= catchers.Count)
+				selectedCatcher = 0;
+			selectCatcher();
 		}
 		
-		Pegador pegadorMonitorado;
-		private void Pegador_MonitorandoChanged(object sender, MonitorandoArgs e)
+		Catcher monitoredCatcher;
+		private void Catcher_MonitoringChanged(object sender, MonitoringArgs e)
 		{
 			if(e.valor) //Importante para evitar recursividade
 			{
-				if(pegadorMonitorado != null) 
+				if(monitoredCatcher != null) 
 				{
-					if(pegadorMonitorado != (Pegador)sender)
-						pegadorMonitorado.Monitorando = false;
+					if(monitoredCatcher != (Catcher)sender)
+						monitoredCatcher.Monitoring = false;
 				}			
-				pegadorMonitorado = (Pegador)sender;
+				monitoredCatcher = (Catcher)sender;
 			}
 		}
 		
-		int pegadorSelecionado;
-		private void selecionaPegador()
+		int selectedCatcher;
+		private void selectCatcher()
 		{
-			if(pegadorSelecionado >= 0 && pegadorSelecionado < pegadores.Count)
+			if(selectedCatcher >= 0 && selectedCatcher < catchers.Count)
 			{
-				KeyValuePair<int, Pegador> k = pegadores.ElementAt(pegadorSelecionado);
-				Pegador p =  k.Value;
-				p.Monitorando = true;
-				atualizaLabels();
+				KeyValuePair<int, Catcher> k = catchers.ElementAt(selectedCatcher);
+				Catcher p =  k.Value;
+				p.Monitoring = true;
+				updateLabels();
 			}
 			else
 			{
-				pegadorSelecionado = 0;
+				selectedCatcher = 0;
 			}
 		}
 
-		private void atualizaLabels()
+		private void updateLabels()
 		{
-			int b = bolaSelecionada + 1;
-			int p = pegadorSelecionado + 1;
-			txtBola.Text = "Bola " + b.ToString() + " de " + bolas.Count().ToString();
-			txtPegador.Text = "Pegador " + p.ToString() + " de " + pegadores.Count().ToString();
+			int b = selectedBall + 1;
+			int p = selectedCatcher + 1;
+			txtBall.Text = "Ball " + b.ToString() + " of " + balls.Count().ToString();
+            txtCatcher.Text = "Catcher " + p.ToString() + " of " + catchers.Count().ToString();
 		}
 
-		private void btnDestroiPegador_Click(object sender, System.Windows.RoutedEventArgs e)
+		private void btnDestroyCatcher_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
-			if (pegadores.Count > 0)
+			if (catchers.Count > 0)
 			{
-				if(pegadorSelecionado == pegadores.Count - 1)
-					pegadorSelecionado = -1;
-				KeyValuePair<int, Pegador> k = pegadores.ElementAt(pegadores.Count - 1);
-				k.Value.Terminar();
-				pegadores.Remove(k.Key);
-				atualizaLabels();
+				if(selectedCatcher == catchers.Count - 1)
+					selectedCatcher = -1;
+				KeyValuePair<int, Catcher> k = catchers.ElementAt(catchers.Count - 1);
+				k.Value.Finish();
+				catchers.Remove(k.Key);
+				updateLabels();
 			}
 		}
 

@@ -2,12 +2,12 @@
 
 namespace DynamicCreationAndCollision
 {
-	public delegate void MonitorandoHaldler(object sender, MonitorandoArgs e);
+	public delegate void MonitoringHaldler(object sender, MonitoringArgs e);
 	
-	public class MonitorandoArgs : EventArgs {
+	public class MonitoringArgs : EventArgs {
 		public bool valor;
 		
-		public MonitorandoArgs(bool val)
+		public MonitoringArgs(bool val)
 		{
 			this.valor = val;
 		}

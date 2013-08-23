@@ -10,44 +10,44 @@ using System.Collections.Generic;
 
 namespace DynamicCreationAndCollision
 {
-	public partial class Pegador : UserControl
+	public partial class Catcher : UserControl
 	{
-		private Dictionary<int, Bola> bolas;
+		private Dictionary<int, Ball> balls;
 		private TextBox painelTop;
 		private TextBox painelLeft;
 		private double rootWidth;
-		public double Velocidade;
-		private bool monitorando;
-		public bool Monitorando
+		public double Speed;
+		private bool monitoring;
+		public bool Monitoring
 		{
 			get 
 			{
-				return monitorando;
+				return monitoring;
 			}
 			set 
 			{
-				monitorando = value;
+				monitoring = value;
 				if (value)
 				{
-					Retangulo.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                    catcher.Stroke = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
 				}
 				else
 				{
-					Retangulo.Stroke = null;
+                    catcher.Stroke = null;
 				}				
-				if(MonitorandoChanged != null)
-					MonitorandoChanged(this, new MonitorandoArgs(value));
+				if(MonitoringChanged != null)
+					MonitoringChanged(this, new MonitoringArgs(value));
 			}
 		}
-		public double Esquerda 	{ get { return Canvas.GetLeft(this); } }
-		public double Direita 	{ get { return Canvas.GetLeft(this) + this.Width ; } }
-		public double Topo 		{ get { return Canvas.GetTop(this); } }
-		public double Fundo 	{ get { return Canvas.GetTop(this) + this.Height ; } }
+		public double Left 	    { get { return Canvas.GetLeft(this); } }
+		public double Right 	{ get { return Canvas.GetLeft(this) + this.Width ; } }
+		public double Top 		{ get { return Canvas.GetTop(this); } }
+		public double Bottom 	{ get { return Canvas.GetTop(this) + this.Height ; } }
 
-		public event MonitorandoHaldler MonitorandoChanged;
-		public event PegouHaldler Pegou;
+		public event MonitoringHaldler MonitoringChanged;
+		public event CaughtHaldler Caught;
 		
-		public Pegador(double Width, ref TextBox txtTop, ref TextBox txtLeft, ref Dictionary<int, Bola> bolasDic)
+		public Catcher(double Width, ref TextBox txtTop, ref TextBox txtLeft, ref Dictionary<int, Ball> ballDic)
 		{
 			// Required to initialize variables
 			InitializeComponent();
@@ -55,31 +55,30 @@ namespace DynamicCreationAndCollision
 			this.rootWidth = Width;
 			this.painelTop = txtTop;
 			this.painelLeft = txtLeft;
-			this.Velocidade = (((new Random(DateTime.Now.Millisecond).NextDouble()) * 4.0) -2);
-			this.monitorando = false;
-			this.bolas = bolasDic;
+			this.Speed = (((new Random(DateTime.Now.Millisecond).NextDouble()) * 4.0) -2);
+			this.monitoring = false;
+			this.balls = ballDic;
          	
 			Move.Completed += new EventHandler(Move_Completed);
             Move.Begin();
 		}
 		
-		private void Pega()
+		private void Cach()
 		{
-			foreach(KeyValuePair<int, Bola> k in bolas)
+			foreach(KeyValuePair<int, Ball> b in balls)
 			{
 				//Testa se esta na mesma direção horizontal
-				if(k.Value.Esquerda >= this.Esquerda && k.Value.Esquerda <= this.Direita 
-					|| k.Value.Direita >= this.Esquerda && k.Value.Direita <= this.Direita )
+				if(b.Value.Left >= this.Left && b.Value.Left <= this.Right 
+					|| b.Value.Right >= this.Left && b.Value.Right <= this.Right )
 				{
 					//Agora testa se está na mesma posição vertical
-					if(k.Value.Topo >= this.Topo && k.Value.Topo <= this.Fundo 
-						|| k.Value.Fundo >= this.Topo && k.Value.Fundo <= this.Fundo )
+					if(b.Value.Top >= this.Top && b.Value.Top <= this.Bottom 
+						|| b.Value.Bottom >= this.Top && b.Value.Bottom <= this.Bottom )
 					{
-						bolas.Remove(k.Key);
-						k.Value.Terminar();
-						if(Pegou != null)
-							Pegou(this, null);
-						//this.Terminar();
+						balls.Remove(b.Key);
+						b.Value.Finish();
+						if(Caught != null)
+							Caught(this, null);
 						return;
 					}
 				}
@@ -88,41 +87,41 @@ namespace DynamicCreationAndCollision
 		
         private void Move_Completed(object sender, EventArgs e)
         {
-            Canvas.SetLeft(this, Esquerda + Velocidade);
-			Pega();
-			if (this.monitorando)
+            Canvas.SetLeft(this, Left + Speed);
+			Cach();
+			if (this.monitoring)
 			{
-				painelTop.Text = Topo.ToString("0.00");
-				painelLeft.Text = Esquerda.ToString("0.00");
+				painelTop.Text = Top.ToString("0.00");
+				painelLeft.Text = Left.ToString("0.00");
 			}
 			
-            if (Esquerda + this.Width >= this.rootWidth)
+            if (Left + this.Width >= this.rootWidth)
             {
-                Velocidade *= -1;
+                Speed *= -1;
             }
-            else if (Esquerda <= 0)
+            else if (Left <= 0)
             {
-                Velocidade *= -1;
+                Speed *= -1;
             }
             Move.Begin();
         }
 
-		private void Retangulo_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+		private void Catcher_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
 		{
-			this.Monitorando = !this.Monitorando;
+			this.Monitoring = !this.Monitoring;
 		}
 		
-		public void Terminar()
+		public void Finish()
 		{
 			if (Move != null)
 				Move.Stop();
 			Canvas c = (Canvas)this.Parent;
 			if (c != null)
 				c.Children.Remove(this);
-			this.bolas = null;
+			this.balls = null;
 		}
 	}
 	
-	public delegate void PegouHaldler(object sender, EventArgs e);
+	public delegate void CaughtHaldler(object sender, EventArgs e);
 	
 }
