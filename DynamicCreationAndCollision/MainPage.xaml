@@ -1,0 +1,59 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="DynamicCreationAndCollision.MainPage"
+	Width="640" Height="480" mc:Ignorable="d">
+	<UserControl.Resources>
+		<Storyboard x:Name="SBPegou" AutoReverse="False">
+			<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="LayoutRoot_Painel">
+				<EasingColorKeyFrame KeyTime="0" Value="Black"/>
+				<EasingColorKeyFrame KeyTime="0:0:0.7" Value="White">
+					<EasingColorKeyFrame.EasingFunction>
+						<BounceEase EasingMode="EaseOut"/>
+					</EasingColorKeyFrame.EasingFunction>
+				</EasingColorKeyFrame>
+				<EasingColorKeyFrame KeyTime="0:0:1" Value="Black"/>
+			</ColorAnimationUsingKeyFrames>
+		</Storyboard>
+	</UserControl.Resources>
+	<Canvas x:Name="LayoutPrincipal">
+		<Canvas x:Name="LayoutRoot_Painel" Height="69" Canvas.Top="0" Width="640" Background="Black">
+			<Rectangle x:Name="rectangle1" Fill="{x:Null}" Height="56" Canvas.Left="12" Stroke="White" Canvas.Top="8" Width="270"/>
+			<TextBox x:Name="txtBolaTop" Height="25" TextWrapping="Wrap" Text="999,999" Width="71" Canvas.Left="51" Canvas.Top="30" FontSize="14.667" HorizontalContentAlignment="Right" IsEnabled="False" TextAlignment="Right"/>
+			<TextBox x:Name="txtBolaLeft" Height="25" TextWrapping="Wrap" Text="999,999" Width="71" Canvas.Left="160" FontSize="14.667" HorizontalContentAlignment="Right" IsEnabled="False" Canvas.Top="30" RenderTransformOrigin="0.083,0.44" TextAlignment="Right"/>
+			<TextBlock Height="22" Canvas.Left="19" TextWrapping="Wrap" Canvas.Top="33" Width="31" Foreground="White" FontSize="14.667"><Run Language="pt-br" Text="Top"/></TextBlock>
+			<TextBlock Height="22" Canvas.Left="129" TextWrapping="Wrap" Canvas.Top="33" Width="31" Foreground="White" FontSize="14.667"><Run Language="pt-br" Text="Left"/></TextBlock>
+			<TextBlock x:Name="txtBola" Height="22" TextWrapping="Wrap" Canvas.Top="8" Width="270" Foreground="White" FontSize="14.667" Canvas.Left="12" RenderTransformOrigin="0.726,0.455" TextAlignment="Center" Text="Bola 0 de 0"/>
+			<Rectangle x:Name="rectangle2" Fill="{x:Null}" Height="56" Canvas.Left="358" Stroke="White" Canvas.Top="8" Width="270"/>
+			<TextBox x:Name="txtPegadorTop" Height="25" TextWrapping="Wrap" Text="999,999" Width="71" Canvas.Left="396" Canvas.Top="30" FontSize="14.667" HorizontalContentAlignment="Right" TextAlignment="Right" IsEnabled="False"/>
+			<TextBox x:Name="txtPegadorLeft" Height="25" TextWrapping="Wrap" Text="999,999" Width="71" Canvas.Left="504" FontSize="14.667" HorizontalContentAlignment="Right" Canvas.Top="30" RenderTransformOrigin="0.083,0.44" TextAlignment="Right" IsEnabled="False"/>
+			<TextBlock Height="22" Canvas.Left="363" TextWrapping="Wrap" Canvas.Top="33" Width="31" Foreground="White" FontSize="14.667"><Run Language="pt-br" Text="Top"/></TextBlock>
+			<TextBlock Height="22" Canvas.Left="471" TextWrapping="Wrap" Canvas.Top="33" Width="31" Foreground="White" FontSize="14.667"><Run Language="pt-br" Text="Left"/></TextBlock>
+			<TextBlock x:Name="txtPegador" Height="22" TextWrapping="Wrap" Canvas.Top="8" Width="270" Foreground="White" FontSize="14.667" Canvas.Left="358" RenderTransformOrigin="0.726,0.455" TextAlignment="Center" Text="Pegador 0 de 0"/>
+			<Button x:Name="btnCriaPegador" Content="+" Height="22" Canvas.Left="579" Canvas.Top="14" Width="22" Click="btnCriaPegador_Click"/>
+			<Button x:Name="btnPegadorDown" Content="&lt;" Height="22" Canvas.Left="579" Canvas.Top="36" Width="22" Click="btnPegadorDown_Click" RenderTransformOrigin="0.5,0.5"/>
+			<Button x:Name="btnPegadorUp" Content="&gt;" Height="22" Canvas.Left="601" Canvas.Top="36" Width="22" Click="btnPegadorUp_Click"/>
+			<Button x:Name="btnCriaBola" Content="+" Height="22" Canvas.Left="245" Canvas.Top="14" Width="22" Click="btnCriaBola_Click" RenderTransformOrigin="-0.727,0.636"/>
+			<Button x:Name="btnBolaDown" Content="&lt;" Height="22" Canvas.Left="234" Canvas.Top="36" Width="22" Click="btnBolaDown_Click"/>
+			<Button x:Name="btnBolaUp" Content="&gt;" Height="22" Canvas.Left="256" Canvas.Top="36" Width="22" Click="btnBolaUp_Click"/>
+			<Button x:Name="btnDestroiPegador" Content="-" Height="22" Canvas.Left="601" Canvas.Top="14" Width="22" Click="btnDestroiPegador_Click"/>
+			<TextBlock Height="36" Canvas.Left="285" TextWrapping="Wrap" Canvas.Top="20" Width="69" Text="COLIDIU" Foreground="Black" FontFamily="Bodoni MT Poster Compressed" FontSize="29.333" TextAlignment="Center"/>
+			<ed:RegularPolygon Height="61" InnerRadius="0.85" Canvas.Left="282" PointCount="20" Stretch="Fill" Stroke="Black" UseLayoutRounding="False" Width="76" Canvas.Top="5"/>
+		</Canvas>
+		<Canvas x:Name="LayoutRoot" Height="411" Canvas.Top="69" Width="640">
+			<Canvas.Background>
+				<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+					<GradientStop Color="#FF0064FF" Offset="0.008"/>
+					<GradientStop Color="Cyan" Offset="1"/>
+				</LinearGradientBrush>
+			</Canvas.Background>
+		</Canvas>
+		<Canvas x:Name="LayoutRoot_Splash" Height="480" Width="640" MouseLeftButtonDown="LayoutRoot_Splash_MouseLeftButtonDown">
+			<Canvas.Background>
+				<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+					<GradientStop Color="#E50000FF" Offset="0"/>
+					<GradientStop Color="#B2FF0000" Offset="1"/>
+					<GradientStop Color="White" Offset="0.5"/>
+				</LinearGradientBrush>
+			</Canvas.Background>
+			<TextBlock Height="396" Canvas.Left="18" TextWrapping="Wrap" Canvas.Top="67" Width="605" FontSize="13.333" TextAlignment="Center"><Run FontWeight="Bold" FontSize="18.667" Text="Exemplo de alguns conceitos básicos"/><LineBreak/><Run FontWeight="Bold" FontSize="18.667"/><LineBreak/><Run Text="• Neste exemplo os “Pegadores” que são retângulos verdes pegam as Bolas amarelas quando colidem com elas, os Pegadores se movimentam no eixo horizontal enquanto as bolas movimentam-se no eixo vertical.&#xd;&#xa;• O usuário pode adicionar bolas, pegadores, remover pegadores, selecionar bolas e pegadores tanto pelo botão de seleção quanto por clique direto.&#xd;&#xa;• Quando o usuário selecionar uma bola e/ou pegador o objeto selecionado atualizará um painel com suas posições Top e Left. Este painel é passado por referencia ao construtor do objeto e é desta forma que ele pode atualizar.&#xd;&#xa;• Os pegadores recebem uma estrutura de dados do tipo Dicionário contendo todas as bolas e é desta forma que ele pode conhecer as bolas e saber se colidiu com alguma. Este dicionário é passado por referencia ao construtor do Pegador e desta forma o pegador fica atualizado, todas as bolas novas também são adicionadas no dicionário.&#xd;&#xa;• Outro conceito que está presente neste exemplo é o conceito de Eventos. Os objetos tem um evento “MonitorandoChanged” que é disparado quando ele é clicado (“selecionado”) e o pegador tem um evento “Pegou” que é disparado quando ele pega uma Bola. Através destes eventos os objetos podem trocar informação com quem os definiu."/></TextBlock>
+		</Canvas>
+	</Canvas>
+</UserControl>
