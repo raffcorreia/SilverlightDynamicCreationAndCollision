@@ -35,7 +35,6 @@ namespace DynamicCreationAndCollision
             Canvas.SetTop(myBall, 0);
             LayoutRoot.Children.Add(myBall);
 			balls.Add(myBall.GetHashCode(), myBall);
-			selectBall();
 			updateLabels();
 		}
 
@@ -49,7 +48,6 @@ namespace DynamicCreationAndCollision
             Canvas.SetTop(theCatcher, (new Random(DateTime.Now.Millisecond).NextDouble()) * (LayoutRoot.Height - theCatcher.Height));
             LayoutRoot.Children.Add(theCatcher);
 			catchers.Add(theCatcher.GetHashCode(), theCatcher);
-			selectCatcher();
 			updateLabels();
 		}
 		
@@ -72,7 +70,7 @@ namespace DynamicCreationAndCollision
 		Ball monitoredBall;
 		private void Ball_MonitoringChanged(object sender, MonitoringArgs e)
 		{
-			if(e.valor) //Importante para evitar recursividade
+			if(e.valor) //Important to avoid recursivity
 			{
 				if(monitoredBall != null) 
 				{
@@ -86,8 +84,6 @@ namespace DynamicCreationAndCollision
 		private void Catcher_Caught(object sender, EventArgs e)
 		{
 			SBCaught.Begin();
-			selectCatcher();
-			selectBall();
 			updateLabels();
 		}
 		
@@ -126,7 +122,7 @@ namespace DynamicCreationAndCollision
 		Catcher monitoredCatcher;
 		private void Catcher_MonitoringChanged(object sender, MonitoringArgs e)
 		{
-			if(e.valor) //Importante para evitar recursividade
+            if (e.valor) //Important to avoid recursivity
 			{
 				if(monitoredCatcher != null) 
 				{

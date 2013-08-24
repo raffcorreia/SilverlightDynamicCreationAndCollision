@@ -67,11 +67,11 @@ namespace DynamicCreationAndCollision
 		{
 			foreach(KeyValuePair<int, Ball> b in balls)
 			{
-				//Testa se esta na mesma direção horizontal
+				//Test if they are in the same horizontal direction
 				if(b.Value.Left >= this.Left && b.Value.Left <= this.Right 
 					|| b.Value.Right >= this.Left && b.Value.Right <= this.Right )
 				{
-					//Agora testa se está na mesma posição vertical
+                    //Test if they are in the same vertical direction
 					if(b.Value.Top >= this.Top && b.Value.Top <= this.Bottom 
 						|| b.Value.Bottom >= this.Top && b.Value.Bottom <= this.Bottom )
 					{
